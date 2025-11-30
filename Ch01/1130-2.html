@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
   <meta charset="utf-8" />
   <title>裝置狀態監控 - 完整權限管理 (無 class / async-await)</title>
@@ -47,55 +47,70 @@
 
   <script>
     // ====== 1. 檢查定位功能 ======
-if (!("geolocation" in navigator)) {
-    console.log("地理定位服務不可用");
-} else {
-    console.log("地理定位服務可用");
-}
-
-// ====== 2.（可選）權限請求：避免第一次無法取得 ======
-async function requestGeoPermission() {
-    try {
-        if (navigator.permissions) {
-            const result = await navigator.permissions.query({ name: "geolocation" });
-            console.log("定位權限狀態：", result.state);
-        }
-    } catch (e) {
-        console.log("權限 API 可能不支援");
+    if (!("geolocation" in navigator)) {
+        console.log("地理定位服務不可用");
+        document.getElementById('status').textContent = '地理定位服務不可用';
+    } else {
+        console.log("地理定位服務可用");
     }
-}
 
-// 呼叫一次
-requestGeoPermission();
-
-
-// ====== 3. 取得經度/緯度/海拔 ======
-function readLocation() {
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            const coords = position.coords;
-
-            console.log("✅ 緯度 latitude:", coords.latitude);
-            console.log("✅ 經度 longitude:", coords.longitude);
-            console.log("✅ 海拔 altitude:", coords.altitude);  // 可能為 null
-            console.log("（海拔精度 altitudeAccuracy:", coords.altitudeAccuracy, ")");
-
-            // 你可以把資料放到 HTML
-            /*
-            document.getElementById("lat").textContent = coords.latitude;
-            document.getElementById("lon").textContent = coords.longitude;
-            document.getElementById("alt").textContent = coords.altitude;
-            */
-        },
-        (error) => {
-            console.log("❌ 位置取得失敗：", error);
+    // ====== 2. 權限請求檢查 ======
+    async function requestGeoPermission() {
+        try {
+            if (navigator.permissions) {
+                const result = await navigator.permissions.query({ name: "geolocation" });
+                console.log("定位權限狀態：", result.state);
+                document.getElementById('status').textContent = `定位權限狀態：${result.state}`;
+            }
+        } catch (e) {
+            console.log("權限 API 可能不支援");
+            document.getElementById('status').textContent = '無法檢查權限狀態';
         }
-    );
-}
+    }
 
-// 呼叫一次取得位置
-readLocation();
+    // 呼叫一次權限檢查
+    requestGeoPermission();
+
+    // ====== 3. 取得經度/緯度/海拔 ======
+    function readLocation() {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const coords = position.coords;
+                console.log("✅ 緯度 latitude:", coords.latitude);
+                console.log("✅ 經度 longitude:", coords.longitude);
+                console.log("✅ 海拔 altitude:", coords.altitude);  // 可能為 null
+                console.log("（海拔精度 altitudeAccuracy:", coords.altitudeAccuracy, ")");
+                
+                // 顯示在頁面上
+                document.getElementById('stateDisplay').textContent = 
+                    `緯度: ${coords.latitude}\n` +
+                    `經度: ${coords.longitude}\n` +
+                    `海拔: ${coords.altitude || '未提供'}\n` +
+                    `海拔精度: ${coords.altitudeAccuracy || '未提供'}`;
+            },
+            (error) => {
+                console.log("❌ 位置取得失敗：", error);
+                document.getElementById('stateDisplay').textContent = 
+                    `位置取得失敗：${error.message}`;
+            }
+        );
+    }
+
+    // 呼叫一次取得位置
+    readLocation();
+
+    // ====== 4. 重新請求位置權限 ======
+    function retryGeolocation() {
+        console.log("重新請求位置權限...");
+        readLocation();
+    }
+
+    // ====== 5. 手動請求感測器權限（iOS） ======
+    function requestSensorPermissionsManually() {
+        // 這部分通常是針對特定 iOS 行為做的模擬
+        console.log("手動請求感測器權限 (iOS)");
+        document.getElementById('status').textContent = '請求感測器權限（iOS）...';
+    }
   </script>
 </body>
 </html>
-
