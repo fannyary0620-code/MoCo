@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fetch</title>
+    <style>
+        .sensor-data { margin: 20px; padding: 15px; border: 1px solid #ccc; }
+        .axis { margin: 10px 0; }
+        .value { font-weight: bold; color: #007bff; }
+    </style>
+</head>
+<body>
+    <h1>Fetch Demo</h1>
+    <div class="json-output">
+        <h3>JSON 資料格式</h3>
+        <pre id="jsonOutput"></pre>
+    </div>
+
+    <script>
+        async function f_test(){
+            //let url = 'https://api.github.com/repos/javascript-tutorial/en.javascript.info/commits';
+            let url = 'https://api.github.com/repos/fannyary0620-code/MoCo/commits';
+            let response = await fetch(url);
+
+            let commits = await response.json(); // read response body and parse as JSON
+
+            //alert(commits[0].author.login);
+            const jsonOutput = document.getElementById('jsonOutput');
+            jsonOutput.textContent = JSON.stringify(commits[0]);
+
+           
+        }
+        f_test()
+    </script>
+</body>
+</html>
+
