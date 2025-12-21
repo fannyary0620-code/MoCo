@@ -78,7 +78,7 @@
 </head>
 <body>
 
-    <div class="container"> <h2>Final</h2> <p style="color: #888;">探索您的所在位置與週邊設施</p> <button class="btn-main" onclick="getLocation()">點擊獲取當前定位</button> <div id="status">尚未取得位置數據</div> <div class="grid-menu"> <button id="btn-store" onclick="searchNearby('便利商店')" disabled>找便利商店</button> <button id="btn-restaurant" onclick="searchNearby('餐廳')" disabled>找附近餐廳</button> <button id="btn-school" onclick="searchNearby('學校')" disabled>找附近學校</button> <button id="btn-mall" onclick="searchNearby('百貨公司')" disabled>找百貨公司</button> <button id="btn-all" class="btn-all" onclick="searchNearby('學校|便利商店|餐廳|百貨公司')" disabled>全部搜尋</button> 
+    <div class="container"> <h2>Final</h2> <p style="color: #888;">探索您的所在位置與週邊設施</p> <button class="btn-main" onclick="getLocation()">點擊獲取當前定位</button> <div id="status">尚未取得位置數據</div> <div class="grid-menu"> <button id="btn-store" onclick="searchNearby('便利商店')" disabled>找便利商店</button> <button id="btn-restaurant" onclick="searchNearby('餐廳')" disabled>找附近餐廳</button> <button id="btn-school" onclick="searchNearby('學校')" disabled>找附近學校</button> <button id="btn-mall" onclick="searchNearby('百貨公司')" disabled>找百貨公司</button> <button id="btn-all" class="btn-all" onclick="searchNearby('學校|便利商店|餐廳|百貨公司|超市')" disabled>全部搜尋</button> 
         </div> <div id="map-container"> <iframe id="google-map" src=""></iframe> </div> </div> <script>
         let lat = 0; // 初始化緯度變數
         let lon = 0; // 初始化經度變數
