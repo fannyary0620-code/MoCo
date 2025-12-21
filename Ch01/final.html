@@ -3,131 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final</title>
+    <title>Final>F>Ftitl
     <style>
-        :root {
-            --primary-color: #4285f4;
-        }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, sans-serif;
             margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #f8f9fa;
-        }
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 15px;
+            background-color: #f0f2f5;
             text-align: center;
         }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
         button {
-            background-color: var(--primary-color);
-            color: white;
+            padding: 12px;
             border: none;
-            padding: 12px 24px;
-            font-size: 16px;
             border-radius: 8px;
+            background: #4285f4;
+            color: white;
+            font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s;
-            margin-bottom: 20px;
         }
-        button:hover {
-            background-color: #3367d6;
-        }
-        #status {
-            margin-top: 10px;
-            color: #666;
-        }
-        /* 地圖容器響應式設定 */
+        button.secondary { background: #34a853; }
+        button.school { background: #fbbc05; color: #333; }
+        button.mall { background: #ea4335; }
+        
         #map-container {
-            width: 100%;
-            height: 400px; /* 電腦預設高度 */
             margin-top: 20px;
-            border-radius: 8px;
+            height: 450px;
+            display: none;
+            border-radius: 10px;
             overflow: hidden;
-            display: none; /* 初始隱藏 */
             border: 1px solid #ddd;
         }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
-        /* 手機版微調 */
-        @media (max-width: 600px) {
-            #map-container {
-                height: 300px; /* 手機螢幕較小，縮短高度 */
-            }
-            body {
-                padding: 10px;
-            }
-        }
+        iframe { width: 100%; height: 100%; border: 0; }
+        #status { margin: 15px 0; color: #555; font-size: 14px; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>我的位置</h1>
-        <p>點擊下方按鈕以獲取您的當前位置：</p>
+        <h2>我的位置與週邊探索</h2>
+        <p>請先獲取定位，再選擇您想尋找的地標類型：</p>
         
-        <button onclick="getLocation()">獲取我的定位</button>
+        <button style="width: 100%;" onclick="getLocation()">1. 獲取我的當前定位</button>
         
-        <div id="status">等待取得位置...</div>
+        <div id="status">尚未取得位置</div>
+
+        <div class="btn-group">
+            <button class="secondary" onclick="searchNearby('便利商店')" disabled id="btn-store">找便利商店</button>
+            <button class="school" onclick="searchNearby('學校')" disabled id="btn-school">找學校</button>
+            <button class="mall" onclick="searchNearby('百貨公司')" disabled id="btn-mall">找百貨公司</button>
+            <button style="background:#666" onclick="searchNearby('')" disabled id="btn-reset">回到我的位置</button>
+        </div>
 
         <div id="map-container">
-            <iframe id="google-map" src="" allowfullscreen></iframe>
+            <iframe id="google-map" src=""></iframe>
         </div>
     </div>
 
     <script>
+        let userLat = 0;
+        let userLon = 0;
         const status = document.getElementById('status');
         const mapContainer = document.getElementById('map-container');
         const mapIframe = document.getElementById('google-map');
+        const buttons = ['btn-store', 'btn-school', 'btn-mall', 'btn-reset'];
 
         function getLocation() {
             if (navigator.geolocation) {
-                status.textContent = "正在定位中...";
-                // 請求定位
+                status.textContent = "定位中，請稍候...";
                 navigator.geolocation.getCurrentPosition(showPosition, showError);
             } else {
-                status.textContent = "抱歉，您的瀏覽器不支援定位功能。";
+                status.textContent = "瀏覽器不支援定位。";
             }
         }
 
         function showPosition(position) {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
+            userLat = position.coords.latitude;
+            userLon = position.coords.longitude;
+            status.innerHTML = `定位成功！<br>座標：${userLat.toFixed(4)}, ${userLon.toFixed(4)}`;
             
-            status.innerHTML = `定位成功！<br>緯度: ${lat.toFixed(4)} / 經度: ${lon.toFixed(4)}`;
+            // 啟用搜尋按鈕
+            buttons.forEach(id => document.getElementById(id).disabled = false);
+            
+            // 預設顯示我的位置
+            searchNearby('');
+        }
 
-            // 使用 Google Maps Embed API 顯示位置 (無需 API Key 的簡單方式)
-            const mapUrl = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
+        function searchNearby(keyword) {
+            mapContainer.style.display = "block";
+            let url = "";
             
-            mapIframe.src = mapUrl;
-            mapContainer.style.display = "block"; // 顯示地圖
+            if (keyword === '') {
+                // 僅顯示定位點
+                url = `https://maps.google.com/maps?q=${userLat},${userLon}&z=16&output=embed`;
+            } else {
+                // 搜尋週邊關鍵字
+                url = `https://maps.google.com/maps?q=${keyword}&ll=${userLat},${userLon}&z=15&output=embed`;
+            }
+            
+            mapIframe.src = url;
+            
+            // 手機版自動捲動到地圖
+            if (window.innerWidth < 600) {
+                mapContainer.scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
         function showError(error) {
-            switch(error.code) {
-                case error.PERMISSION_DENIED:
-                    status.textContent = "使用者拒絕定位請求。";
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    status.textContent = "無法取得位置資訊。";
-                    break;
-                case error.TIMEOUT:
-                    status.textContent = "定位請求超時。";
-                    break;
-                default:
-                    status.textContent = "發生未知錯誤。";
-                    break;
-            }
+            status.textContent = "定位失敗：" + error.message;
         }
     </script>
 </body>
