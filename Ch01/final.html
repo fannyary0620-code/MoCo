@@ -3,69 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final>F>Ftitl
+    <title>Final</title>
     <style>
+        :root {
+            --primary: #4285f4;
+            --success: #34a853;
+            --warning: #fbbc05;
+            --danger: #ea4335;
+            --info: #00acc1;
+        }
         body {
-            font-family: -apple-system, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             margin: 0;
             padding: 15px;
-            background-color: #f0f2f5;
-            text-align: center;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
         }
         .container {
-            max-width: 800px;
-            margin: auto;
+            width: 100%;
+            max-width: 600px;
             background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            text-align: center;
         }
-        .btn-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        button {
-            padding: 12px;
-            border: none;
+        h2 { color: #333; margin-bottom: 10px; }
+        #status {
+            margin: 15px 0;
+            padding: 10px;
+            font-size: 14px;
+            color: #666;
+            background: #f9f9f9;
             border-radius: 8px;
-            background: #4285f4;
+        }
+        .btn-main {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary);
             color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
+            margin-bottom: 20px;
+            transition: transform 0.2s;
         }
-        button.secondary { background: #34a853; }
-        button.school { background: #fbbc05; color: #333; }
-        button.mall { background: #ea4335; }
-        
-        #map-container {
-            margin-top: 20px;
-            height: 450px;
-            display: none;
+        .btn-main:active { transform: scale(0.98); }
+
+        /* 搜尋按鈕組 */
+        .grid-menu {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .grid-menu button {
+            padding: 12px;
+            border: none;
             border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        .grid-menu button:disabled {
+            background-color: #ccc !important;
+            cursor: not-allowed;
+        }
+        .btn-store { background-color: var(--success); }
+        .btn-restaurant { background-color: var(--info); } /* 新增餐廳顏色 */
+        .btn-school { background-color: var(--warning); color: #333; }
+        .btn-mall { background-color: var(--danger); }
+        .btn-reset { background-color: #666; grid-column: span 2; }
+
+        #map-container {
+            margin-top: 25px;
+            height: 400px;
+            display: none;
+            border-radius: 15px;
             overflow: hidden;
-            border: 1px solid #ddd;
+            border: 2px solid #eee;
         }
         iframe { width: 100%; height: 100%; border: 0; }
-        #status { margin: 15px 0; color: #555; font-size: 14px; }
+
+        @media (max-width: 480px) {
+            #map-container { height: 350px; }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>我的位置與週邊探索</h2>
-        <p>請先獲取定位，再選擇您想尋找的地標類型：</p>
+        <h2>Final</h2>
+        <p style="color: #888;">探索您的所在位置與週邊設施</p>
         
-        <button style="width: 100%;" onclick="getLocation()">1. 獲取我的當前定位</button>
+        <button class="btn-main" onclick="getLocation()">點擊獲取當前定位</button>
         
-        <div id="status">尚未取得位置</div>
+        <div id="status">尚未取得位置數據</div>
 
-        <div class="btn-group">
-            <button class="secondary" onclick="searchNearby('便利商店')" disabled id="btn-store">找便利商店</button>
-            <button class="school" onclick="searchNearby('學校')" disabled id="btn-school">找學校</button>
-            <button class="mall" onclick="searchNearby('百貨公司')" disabled id="btn-mall">找百貨公司</button>
-            <button style="background:#666" onclick="searchNearby('')" disabled id="btn-reset">回到我的位置</button>
+        <div class="grid-menu">
+            <button id="btn-store" class="btn-store" onclick="searchNearby('便利商店')" disabled>找便利商店</button>
+            <button id="btn-restaurant" class="btn-restaurant" onclick="searchNearby('餐廳')" disabled>找附近餐廳</button>
+            <button id="btn-school" class="btn-school" onclick="searchNearby('學校')" disabled>找附近學校</button>
+            <button id="btn-mall" class="btn-mall" onclick="searchNearby('百貨公司')" disabled>找百貨公司</button>
+            <button id="btn-reset" class="btn-reset" onclick="searchNearby('')" disabled>重設（只看我的位置）</button>
         </div>
 
         <div id="map-container">
@@ -74,56 +117,65 @@
     </div>
 
     <script>
-        let userLat = 0;
-        let userLon = 0;
-        const status = document.getElementById('status');
-        const mapContainer = document.getElementById('map-container');
+        let lat = 0;
+        let lon = 0;
+        const statusText = document.getElementById('status');
+        const mapBox = document.getElementById('map-container');
         const mapIframe = document.getElementById('google-map');
-        const buttons = ['btn-store', 'btn-school', 'btn-mall', 'btn-reset'];
+        const allButtons = ['btn-store', 'btn-restaurant', 'btn-school', 'btn-mall', 'btn-reset'];
 
         function getLocation() {
             if (navigator.geolocation) {
-                status.textContent = "定位中，請稍候...";
+                statusText.textContent = "正在獲取 GPS 訊號...";
                 navigator.geolocation.getCurrentPosition(showPosition, showError);
             } else {
-                status.textContent = "瀏覽器不支援定位。";
+                statusText.textContent = "您的瀏覽器不支持定位功能。";
             }
         }
 
         function showPosition(position) {
-            userLat = position.coords.latitude;
-            userLon = position.coords.longitude;
-            status.innerHTML = `定位成功！<br>座標：${userLat.toFixed(4)}, ${userLon.toFixed(4)}`;
-            
-            // 啟用搜尋按鈕
-            buttons.forEach(id => document.getElementById(id).disabled = false);
-            
-            // 預設顯示我的位置
+            lat = position.coords.latitude;
+            lon = position.coords.longitude;
+            statusText.innerHTML = `定位成功！<br>緯度: ${lat.toFixed(4)} / 經度: ${lon.toFixed(4)}`;
+
+            // 啟用所有搜尋按鈕
+            allButtons.forEach(id => document.getElementById(id).disabled = false);
+
+            // 自動顯示一次目前位置
             searchNearby('');
         }
 
         function searchNearby(keyword) {
-            mapContainer.style.display = "block";
+            mapBox.style.display = "block";
             let url = "";
-            
+
             if (keyword === '') {
-                // 僅顯示定位點
-                url = `https://maps.google.com/maps?q=${userLat},${userLon}&z=16&output=embed`;
+                // 顯示當前位置點
+                url = `https://maps.google.com/maps?q=${lat},${lon}&z=16&output=embed`;
             } else {
-                // 搜尋週邊關鍵字
-                url = `https://maps.google.com/maps?q=${keyword}&ll=${userLat},${userLon}&z=15&output=embed`;
+                // 顯示週邊地標
+                url = `https://maps.google.com/maps?q=${keyword}&ll=${lat},${lon}&z=15&output=embed`;
             }
-            
+
             mapIframe.src = url;
-            
-            // 手機版自動捲動到地圖
+
+            // 針對手機自動捲動
             if (window.innerWidth < 600) {
-                mapContainer.scrollIntoView({ behavior: 'smooth' });
+                setTimeout(() => {
+                    mapBox.scrollIntoView({ behavior: 'smooth' });
+                }, 300);
             }
         }
 
         function showError(error) {
-            status.textContent = "定位失敗：" + error.message;
+            let msg = "";
+            switch(error.code) {
+                case error.PERMISSION_DENIED: msg = "使用者拒絕提供位置。"; break;
+                case error.POSITION_UNAVAILABLE: msg = "無法取得位置資訊。"; break;
+                case error.TIMEOUT: msg = "請求超時。"; break;
+                default: msg = "發生未知錯誤。"; break;
+            }
+            statusText.textContent = msg;
         }
     </script>
 </body>
