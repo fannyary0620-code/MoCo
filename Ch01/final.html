@@ -1,181 +1,125 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final</title>
-    <style>
+<!DOCTYPE html> <html lang="zh-Hant"> <head>
+    <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Final</title> <style>
         :root {
-            --primary: #4285f4;
-            --success: #34a853;
-            --warning: #fbbc05;
-            --danger: #ea4335;
-            --info: #00acc1;
+            --primary: #4285f4; /* 定義主要藍色變數 */
+            --light-grey: #e0e0e0; /* 定義選單按鈕的淺灰色變數 */
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            margin: 0;
-            padding: 15px;
-            background-color: #f4f7f6;
-            display: flex;
-            justify-content: center;
+            font-family: -apple-system, sans-serif; /* 設定網頁字體，優先使用系統內建字體 */
+            margin: 0; /* 移除網頁邊距 */
+            padding: 15px; /* 設定網頁四周內距 */
+            background-color: #f4f7f6; /* 設定網頁背景顏色為極淺灰 */
+            display: flex; /* 使用彈性佈局 */
+            justify-content: center; /* 水平置中內容 */
         }
         .container {
-            width: 100%;
-            max-width: 600px;
-            background: white;
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            text-align: center;
+            width: 100%; /* 手機版寬度佔滿 */
+            max-width: 600px; /* 電腦版最大寬度限制在 600px */
+            background: white; /* 內容區背景為白色 */
+            padding: 25px; /* 內容區內距 */
+            border-radius: 20px; /* 圓角化容器邊緣 */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); /* 加入輕微的陰影讓視覺有層次感 */
+            text-align: center; /* 文字置中 */
         }
-        h2 { color: #333; margin-bottom: 10px; }
+        h2 { color: #333; margin-bottom: 10px; } /* 標題顏色與間距設定 */
         #status {
-            margin: 15px 0;
-            padding: 10px;
-            font-size: 14px;
-            color: #666;
-            background: #f9f9f9;
-            border-radius: 8px;
+            margin: 15px 0; /* 狀態欄上下間距 */
+            padding: 10px; /* 狀態欄內距 */
+            font-size: 14px; /* 狀態欄字體大小 */
+            color: #666; /* 狀態欄文字顏色 */
+            background: #f9f9f9; /* 狀態欄背景 */
+            border-radius: 8px; /* 狀態欄圓角 */
         }
         .btn-main {
-            width: 100%;
-            padding: 15px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 20px;
-            transition: transform 0.2s;
+            width: 100%; /* 按鈕寬度 100% */
+            padding: 15px; /* 按鈕高度內距 */
+            background-color: var(--primary); /* 使用藍色變數 */
+            color: white; /* 文字白色 */
+            border: none; /* 移除邊框 */
+            border-radius: 12px; /* 按鈕圓角 */
+            font-size: 16px; /* 字體大小 */
+            font-weight: bold; /* 字體加粗 */
+            cursor: pointer; /* 滑鼠移上去顯示手指圖示 */
+            margin-bottom: 20px; /* 下方間距 */
         }
-        .btn-main:active { transform: scale(0.98); }
-
-        /* 搜尋按鈕組 */
         .grid-menu {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            display: grid; /* 使用網格佈局 */
+            grid-template-columns: 1fr 1fr; /* 設定為平均兩欄 */
+            gap: 12px; /* 按鈕間的間隙 */
         }
         .grid-menu button {
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.3s;
+            padding: 12px; /* 選單按鈕內距 */
+            border: none; /* 移除按鈕邊框 */
+            border-radius: 10px; /* 選單按鈕圓角 */
+            background-color: var(--light-grey); /* 統一使用淺灰色背景 */
+            color: #333; /* 選單文字深灰色 */
+            font-weight: 600; /* 字體稍微加粗 */
+            cursor: pointer; /* 手指圖示 */
+            transition: all 0.2s; /* 加入轉場動畫效果 */
         }
         .grid-menu button:disabled {
-            background-color: #ccc !important;
-            cursor: not-allowed;
+            background-color: #f0f0f0; /* 禁用時變為更淡的灰 */
+            color: #ccc; /* 禁用時文字變灰 */
+            cursor: not-allowed; /* 禁用時滑鼠顯示禁止圖示 */
         }
-        .btn-store { background-color: var(--success); }
-        .btn-restaurant { background-color: var(--info); } /* 新增餐廳顏色 */
-        .btn-school { background-color: var(--warning); color: #333; }
-        .btn-mall { background-color: var(--danger); }
-        .btn-reset { background-color: #666; grid-column: span 2; }
-
+        .btn-all {
+            grid-column: span 2; /* 「全部搜尋」按鈕橫跨兩欄 */
+        }
         #map-container {
-            margin-top: 25px;
-            height: 400px;
-            display: none;
-            border-radius: 15px;
-            overflow: hidden;
-            border: 2px solid #eee;
+            margin-top: 25px; /* 地圖區與上方間距 */
+            height: 400px; /* 地圖高度設定 */
+            display: none; /* 預設隱藏地圖，直到定位成功 */
+            border-radius: 15px; /* 地圖圓角化 */
+            overflow: hidden; /* 超出圓角的內容隱藏 */
+            border: 2px solid #eee; /* 地圖區的外框線 */
         }
-        iframe { width: 100%; height: 100%; border: 0; }
-
-        @media (max-width: 480px) {
-            #map-container { height: 350px; }
-        }
+        iframe { width: 100%; height: 100%; border: 0; } /* 設定地圖框架填滿容器且無邊框 */
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>Final</h2>
-        <p style="color: #888;">探索您的所在位置與週邊設施</p>
-        
-        <button class="btn-main" onclick="getLocation()">點擊獲取當前定位</button>
-        
-        <div id="status">尚未取得位置數據</div>
+    <div class="container"> <h2>Final</h2> <p style="color: #888;">探索您的所在位置與週邊設施</p> <button class="btn-main" onclick="getLocation()">點擊獲取當前定位</button> <div id="status">尚未取得位置數據</div> <div class="grid-menu"> <button id="btn-store" onclick="searchNearby('便利商店')" disabled>找便利商店</button> <button id="btn-restaurant" onclick="searchNearby('餐廳')" disabled>找附近餐廳</button> <button id="btn-school" onclick="searchNearby('學校')" disabled>找附近學校</button> <button id="btn-mall" onclick="searchNearby('百貨公司')" disabled>找百貨公司</button> <button id="btn-all" class="btn-all" onclick="searchNearby('景點')" disabled>全部搜尋</button> </div> <div id="map-container"> <iframe id="google-map" src=""></iframe> </div> </div> <script>
+        let lat = 0; // 初始化緯度變數
+        let lon = 0; // 初始化經度變數
+        const statusText = document.getElementById('status'); // 抓取狀態欄 DOM
+        const mapBox = document.getElementById('map-container'); // 抓取地圖容器 DOM
+        const mapIframe = document.getElementById('google-map'); // 抓取地圖框架 DOM
+        const allButtons = ['btn-store', 'btn-restaurant', 'btn-school', 'btn-mall', 'btn-all']; // 定義按鈕 ID 清單
 
-        <div class="grid-menu">
-            <button id="btn-store" class="btn-store" onclick="searchNearby('便利商店')" disabled>找便利商店</button>
-            <button id="btn-restaurant" class="btn-restaurant" onclick="searchNearby('餐廳')" disabled>找附近餐廳</button>
-            <button id="btn-school" class="btn-school" onclick="searchNearby('學校')" disabled>找附近學校</button>
-            <button id="btn-mall" class="btn-mall" onclick="searchNearby('百貨公司')" disabled>找百貨公司</button>
-            <button id="btn-reset" class="btn-reset" onclick="searchNearby('')" disabled>重設（只看我的位置）</button>
-        </div>
-
-        <div id="map-container">
-            <iframe id="google-map" src=""></iframe>
-        </div>
-    </div>
-
-    <script>
-        let lat = 0;
-        let lon = 0;
-        const statusText = document.getElementById('status');
-        const mapBox = document.getElementById('map-container');
-        const mapIframe = document.getElementById('google-map');
-        const allButtons = ['btn-store', 'btn-restaurant', 'btn-school', 'btn-mall', 'btn-reset'];
-
-        function getLocation() {
-            if (navigator.geolocation) {
-                statusText.textContent = "正在獲取 GPS 訊號...";
-                navigator.geolocation.getCurrentPosition(showPosition, showError);
+        function getLocation() { // 定位觸發函數
+            if (navigator.geolocation) { // 判斷瀏覽器是否支援定位
+                statusText.textContent = "正在獲取 GPS 訊號..."; // 更新狀態文字
+                navigator.geolocation.getCurrentPosition(showPosition, showError); // 向系統請求定位權限與資料
             } else {
-                statusText.textContent = "您的瀏覽器不支持定位功能。";
+                statusText.textContent = "您的瀏覽器不支持定位功能。"; // 瀏覽器不支援時的警告
             }
         }
 
-        function showPosition(position) {
-            lat = position.coords.latitude;
-            lon = position.coords.longitude;
-            statusText.innerHTML = `定位成功！<br>緯度: ${lat.toFixed(4)} / 經度: ${lon.toFixed(4)}`;
+        function showPosition(position) { // 成功取得座標後的處理函數
+            lat = position.coords.latitude; // 儲存緯度
+            lon = position.coords.longitude; // 儲存經度
+            statusText.innerHTML = `定位成功！<br>緯度: ${lat.toFixed(4)} / 經度: ${lon.toFixed(4)}`; // 顯示座標到網頁上
 
-            // 啟用所有搜尋按鈕
-            allButtons.forEach(id => document.getElementById(id).disabled = false);
-
-            // 自動顯示一次目前位置
-            searchNearby('');
+            allButtons.forEach(id => document.getElementById(id).disabled = false); // 遍歷清單，啟用所有搜尋按鈕
+            
+            mapBox.style.display = "block"; // 顯示原本隱藏的地圖容器
+            mapIframe.src = `https://www.google.com/maps?q=${lat},${lon}&z=16&output=embed`; // 載入目前位置的地圖
         }
 
-        function searchNearby(keyword) {
-            mapBox.style.display = "block";
-            let url = "";
+        function searchNearby(keyword) { // 週邊搜尋函數
+            mapBox.style.display = "block"; // 確保地圖容器已顯示
+            const url = `https://www.google.com/maps?q=${encodeURIComponent(keyword)}&ll=${lat},${lon}&z=15&output=embed`; // 生成搜尋關鍵字的地圖網址
+            mapIframe.src = url; // 更新地圖框架內容
 
-            if (keyword === '') {
-                // 顯示當前位置點
-                url = `https://maps.google.com/maps?q=${lat},${lon}&z=16&output=embed`;
-            } else {
-                // 顯示週邊地標
-                url = `https://maps.google.com/maps?q=${keyword}&ll=${lat},${lon}&z=15&output=embed`;
-            }
-
-            mapIframe.src = url;
-
-            // 針對手機自動捲動
-            if (window.innerWidth < 600) {
+            if (window.innerWidth < 600) { // 如果是手機版（寬度小於 600px）
                 setTimeout(() => {
-                    mapBox.scrollIntoView({ behavior: 'smooth' });
-                }, 300);
+                    mapBox.scrollIntoView({ behavior: 'smooth' }); // 平滑捲動到地圖位置，方便用戶觀看
+                }, 300); // 延遲 0.3 秒觸發，確保地圖已開始載入
             }
         }
 
-        function showError(error) {
-            let msg = "";
-            switch(error.code) {
-                case error.PERMISSION_DENIED: msg = "使用者拒絕提供位置。"; break;
-                case error.POSITION_UNAVAILABLE: msg = "無法取得位置資訊。"; break;
-                case error.TIMEOUT: msg = "請求超時。"; break;
-                default: msg = "發生未知錯誤。"; break;
-            }
-            statusText.textContent = msg;
+        function showError(error) { // 定位失敗的錯誤處理
+            statusText.textContent = "定位失敗：" + error.message; // 顯示錯誤訊息
         }
     </script>
 </body>
