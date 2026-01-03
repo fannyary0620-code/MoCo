@@ -1,13 +1,13 @@
 <!DOCTYPE html> <html lang="zh-Hant"> <head>
     <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Final</title> <style>
         :root {
-            --primary: #4285f4; /* 定義主要藍色 */
-            --light-grey: #e0e0e0; /* 定義預設淺灰色 */
-            --active-color: #bbdefb; /* 定義選中時的淡藍色 */
-            --google-btn: #34a853; /* 定義 Google 搜尋按鈕的綠色 */
+            --primary: #4285f4; 
+            --light-grey: #e0e0e0; 
+            --active-color: #bbdefb; 
+            --google-btn: #34a853; 
         }
         body {
-            font-family: -apple-system, sans-serif; /* 設定系統字體 */
+            font-family: -apple-system, sans-serif; 
             margin: 0; padding: 15px;
             background-color: #f4f7f6;
             display: flex; justify-content: center;
@@ -33,7 +33,7 @@
         }
         .grid-menu {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* 兩欄排列 */
+            grid-template-columns: 1fr 1fr; 
             gap: 12px;
         }
         .grid-menu button {
@@ -43,7 +43,7 @@
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        /* 選中時放大效果 */
+        
         .active-btn {
             transform: scale(1.08);
             background-color: var(--active-color) !important;
@@ -53,9 +53,9 @@
         .grid-menu button:disabled {
             background-color: #f0f0f0; color: #ccc; cursor: not-allowed;
         }
-        /* Google 探索按鈕樣式 */
+        
         .btn-google {
-            grid-column: span 2; /* 橫跨兩欄 */
+            grid-column: span 2; 
             background-color: var(--google-btn) !important;
             color: white !important;
             margin-top: 5px;
@@ -100,7 +100,7 @@
         const statusText = document.getElementById('status');
         const mapBox = document.getElementById('map-container');
         const mapIframe = document.getElementById('google-map');
-        // 按鈕清單新增了 btn-google
+       
         const allButtons = ['btn-store', 'btn-restaurant', 'btn-school', 'btn-mall', 'btn-market', 'btn-reset', 'btn-google'];
 
         function getLocation() {
@@ -120,7 +120,7 @@
             allButtons.forEach(id => document.getElementById(id).disabled = false);
             mapBox.style.display = "block";
             mapIframe.src = `https://www.google.com/maps/embed/v1/view?key=YOUR_API_KEY&center=${lat},${lon}&zoom=16`; 
-            // 這裡維持使用免 key 的 embed 方式
+            
             mapIframe.src = `https://maps.google.com/maps?q=${lat},${lon}&z=16&output=embed`;
         }
 
@@ -141,11 +141,11 @@
             }
         }
 
-        // 新增函數：將 GPS 與關鍵字送往 Google 搜尋
+       
         function searchOnGoogle() {
-            // 建構搜尋字串：座標 + 告訴我附近有什麼景點
+            
             const query = `${lat},${lon} 告訴我附近有什麼景點`;
-            // 開啟新視窗引導至 Google 搜尋結果頁面
+            
             window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
         }
 
